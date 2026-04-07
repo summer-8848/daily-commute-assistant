@@ -78,9 +78,9 @@ function BusCard({ info }: { info: NextBusInfo }) {
               <div key={dep.time} className="flex flex-col items-center flex-shrink-0">
                 {/* 标记 */}
                 <div className="h-5 flex items-center">
-                  {dep.isPrev && <span className="text-xs text-gray-500">上班</span>}
+                  {dep.isPrev && <span className="text-xs text-gray-500">上一班</span>}
                   {dep.isNext && <span className="text-xs text-green-600 font-medium">等车</span>}
-                  {dep.isNextNext && <span className="text-xs text-gray-500">下班</span>}
+                  {dep.isNextNext && <span className="text-xs text-gray-500">下下一班</span>}
                 </div>
                 {/* 时间 */}
                 <div
