@@ -45,6 +45,16 @@ export interface IntervalRule {
   specialBuses?: string[]; // 特定班次（如"9:07, 9:15"）
 }
 
+// 单个班次时间
+export interface DepartureTime {
+  time: string;           // HH:mm
+  minutes: number;        // 转换为分钟数
+  isPrev: boolean;       // 上一班
+  isCurrent: boolean;    // 当前（等车中）
+  isNext: boolean;       // 下一班
+  isNextNext: boolean;   // 下下班
+}
+
 // 下一班信息
 export interface NextBusInfo {
   transportType: TransportType;
@@ -52,6 +62,8 @@ export interface NextBusInfo {
   price: number;
   note?: string;               // 备注信息
   currentTime: string;          // 当前时间
+  currentMinutes: number;       // 当前分钟数
+  allDepartures: DepartureTime[]; // 所有发车时间
   prevBusTime: string;         // 上一班车时间 HH:mm
   nextBusTime: string;         // 下一班车时间 HH:mm
   nextNextBusTime: string;     // 下下班时间 HH:mm

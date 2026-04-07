@@ -2,7 +2,8 @@ import {
   TransportType,
   DayType,
   ShiftType,
-  NextBusInfo
+  NextBusInfo,
+  DepartureTime
 } from '@/types/commute';
 import { getTransportConfig } from '@/data/transport-config';
 
@@ -205,6 +206,95 @@ function findNextBusInLaterIntervals(
   return null;
 }
 
+// 生成某个区间的所有班次时间
+function generateDeparturesInInterval(
+  startMinutes: number,
+  endMinutes: number,
+  intervalMinutes: number,
+  specialBuses?: string[]
+): number[] {
+  const departures: number[] = [];
+  
+  // 添加特殊班次
+  if (specialBuses && specialBuses.length > 0) {
+    for (const busTime of specialBuses) {
+      const busMinutes = TimeUtils.timeToMinutes(busTime);
+      if (busMinutes >= startMinutes && busMinutes <= endMinutes) {
+        departures.push(busMinutes);
+      }
+    }
+  }
+  
+  // 添加常规班次
+  let current = startMinutes;
+  while (current <= endMinutes) {
+    departures.push(current);
+    current += intervalMinutes;
+  }
+  
+  // 去重并排序
+  return [...new Set(departures)].sort((a, b) => a - b);
+}
+
+// 生成所有班次时间
+function generateAllDepartures(
+  firstBusTime: string,
+  lastBusTime: string,
+  intervals: any[]
+): DepartureTime[] {
+  const firstMinutes = TimeUtils.timeToMinutes(firstBusTime);
+  const lastMinutes = TimeUtils.timeToMinutes(lastBusTime);
+  const allMinutes: number[] = [];
+  
+  for (const interval of intervals) {
+    const startMinutes = TimeUtils.timeToMinutes(interval.startTime);
+    const endMinutes = TimeUtils.timeToMinutes(interval.endTime);
+    const departures = generateDeparturesInInterval(
+      startMinutes,
+      endMinutes,
+      interval.intervalMinutes,
+      interval.specialBuses
+    );
+    allMinutes.push(...departures);
+  }
+  
+  // 去重并排序
+  const uniqueMinutes = [...new Set(allMinutes)].sort((a, b) => a - b);
+  
+  return uniqueMinutes.map(minutes => ({
+    time: TimeUtils.minutesToTime(minutes),
+    minutes,
+    isPrev: false,
+    isCurrent: false,
+    isNext: false,
+    isNextNext: false
+  }));
+}
+
+// 标记上班状态
+function markDepartures(departures: DepartureTime[], currentMinutes: number): DepartureTime[] {
+  let prevIndex = -1;
+  let nextIndex = -1;
+  
+  for (let i = 0; i < departures.length; i++) {
+    if (departures[i].minutes <= currentMinutes) {
+      prevIndex = i;
+    }
+    if (departures[i].minutes > currentMinutes && nextIndex === -1) {
+      nextIndex = i;
+      break;
+    }
+  }
+  
+  return departures.map((d, i) => ({
+    ...d,
+    isPrev: i === prevIndex,
+    isCurrent: d.minutes <= currentMinutes && (i === prevIndex + 1 || (prevIndex === departures.length - 1 && i === prevIndex)),
+    isNext: i === nextIndex,
+    isNextNext: i === nextIndex + 1
+  }));
+}
+
 // 获取下一班车信息
 export function getNextBus(
   transportType: TransportType,
@@ -232,6 +322,8 @@ export function getNextBus(
       price: config.price,
       note: config.note,
       currentTime,
+      currentMinutes: currentTimeMinutes,
+      allDepartures: [],
       prevBusTime: '-',
       nextBusTime: '-',
       nextNextBusTime: '-',
@@ -241,21 +333,43 @@ export function getNextBus(
     };
   }
 
-  const busTimes = calculateBusTimes(
-    currentTimeMinutes,
+  const allDepartures = generateAllDepartures(
     schedule.firstBusTime,
     schedule.lastBusTime,
     schedule.intervals
   );
+  
+  const markedDepartures = markDepartures(allDepartures, currentTimeMinutes);
+
+  // 找到上一班、下一班、下下班
+  let prevBusTime = '-';
+  let nextBusTime = '-';
+  let nextNextBusTime = '-';
+  let waitMinutes = 0;
+  
+  for (let i = 0; i < markedDepartures.length; i++) {
+    if (markedDepartures[i].isPrev) {
+      prevBusTime = markedDepartures[i].time;
+    }
+    if (markedDepartures[i].isNext) {
+      nextBusTime = markedDepartures[i].time;
+      waitMinutes = markedDepartures[i].minutes - currentTimeMinutes;
+    }
+    if (markedDepartures[i].isNextNext) {
+      nextNextBusTime = markedDepartures[i].time;
+    }
+  }
 
   // 如果当前时间无车
-  if (!busTimes.nextBusTime) {
+  if (!nextBusTime) {
     return {
       transportType,
       transportName: config.name,
       price: config.price,
       note: config.note,
       currentTime,
+      currentMinutes: currentTimeMinutes,
+      allDepartures: markedDepartures,
       prevBusTime: '-',
       nextBusTime: '已停运',
       nextNextBusTime: '-',
@@ -265,18 +379,17 @@ export function getNextBus(
     };
   }
 
-  const nextBusMinutes = TimeUtils.timeToMinutes(busTimes.nextBusTime);
-  const waitMinutes = Math.max(0, nextBusMinutes - currentTimeMinutes);
-
   return {
     transportType,
     transportName: config.name,
     price: config.price,
     note: config.note,
     currentTime,
-    prevBusTime: busTimes.prevBusTime || '-',
-    nextBusTime: busTimes.nextBusTime,
-    nextNextBusTime: busTimes.nextNextBusTime || '-',
+    currentMinutes: currentTimeMinutes,
+    allDepartures: markedDepartures,
+    prevBusTime,
+    nextBusTime,
+    nextNextBusTime,
     waitMinutes,
     isOperating: true,
     status: 'ok'

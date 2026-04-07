@@ -1,11 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { NextBusInfo } from '@/types/commute';
 import { useCurrentTime, useTestMode } from '@/hooks/useUserSettings';
 import { getAllNextBuses } from '@/lib/commute-calculator';
 
 function BusCard({ info }: { info: NextBusInfo }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const isMotorcycle = info.transportType === 'motorcycle';
+
   const getStatusColor = () => {
     if (!info.isOperating) return 'bg-gray-100 border-gray-300';
     if (info.waitMinutes <= 3) return 'bg-green-50 border-green-400';
@@ -20,12 +23,28 @@ function BusCard({ info }: { info: NextBusInfo }) {
     return 'text-blue-600';
   };
 
+  // 自动滚动到当前时间位置
+  useEffect(() => {
+    if (scrollRef.current && !isMotorcycle) {
+      const currentElement = scrollRef.current.querySelector('[data-is-current="true"]') as HTMLElement;
+      if (currentElement) {
+        const containerWidth = scrollRef.current.offsetWidth;
+        const elementLeft = currentElement.offsetLeft;
+        const elementWidth = currentElement.offsetWidth;
+        scrollRef.current.scrollTo({
+          left: elementLeft - containerWidth / 2 + elementWidth / 2,
+          behavior: 'smooth'
+        });
+      }
+    }
+  });
+
   return (
     <div className={`rounded-xl border-2 p-4 transition-all ${getStatusColor()}`}>
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className="text-2xl">
-            {info.transportType === 'motorcycle' ? '🛵' : '🚌'}
+            {isMotorcycle ? '🛵' : '🚌'}
           </span>
           <div>
             <h3 className="font-bold text-gray-900">
@@ -50,23 +69,44 @@ function BusCard({ info }: { info: NextBusInfo }) {
         </div>
       </div>
 
-      {/* 上班 / 当前 / 下班 */}
-      <div className="grid grid-cols-3 gap-2 text-center mb-3">
-        <div className="bg-white/30 rounded-lg py-2">
-          <div className="text-xs text-gray-500 mb-1">上一班</div>
-          <div className="font-medium text-gray-700">{info.prevBusTime}</div>
-        </div>
-        <div className="bg-white/50 rounded-lg py-2">
-          <div className="text-xs text-gray-500 mb-1">等车</div>
-          <div className={`font-bold ${getStatusBg()}`}>
-            {info.isOperating && info.waitMinutes > 0 ? `${info.waitMinutes}分钟` : '-'}
+      {/* 发车时间横向滚动列表 */}
+      {!isMotorcycle && info.allDepartures.length > 0 && (
+        <div className="mb-3">
+          {/* 上一班/等车/下下班标记 */}
+          <div className="flex overflow-x-auto gap-1 mb-1 scrollbar-hide" ref={scrollRef}>
+            {info.allDepartures.map((dep) => (
+              <div key={dep.time} className="flex flex-col items-center flex-shrink-0">
+                {/* 标记 */}
+                <div className="h-5 flex items-center">
+                  {dep.isPrev && <span className="text-xs text-gray-500">上班</span>}
+                  {dep.isNext && <span className="text-xs text-green-600 font-medium">等车</span>}
+                  {dep.isNextNext && <span className="text-xs text-gray-500">下班</span>}
+                </div>
+                {/* 时间 */}
+                <div
+                  data-is-current={dep.isNext}
+                  className={`
+                    px-2 py-1 rounded text-sm font-medium min-w-[50px] text-center
+                    ${dep.isPrev ? 'bg-gray-100 text-gray-500' : ''}
+                    ${dep.isNext ? 'bg-green-100 text-green-700 border-2 border-green-400' : ''}
+                    ${dep.isNextNext ? 'bg-blue-50 text-blue-600' : ''}
+                    ${!dep.isPrev && !dep.isNext && !dep.isNextNext ? 'bg-white/50 text-gray-600' : ''}
+                  `}
+                >
+                  {dep.time}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-        <div className="bg-white/30 rounded-lg py-2">
-          <div className="text-xs text-gray-500 mb-1">下下班</div>
-          <div className="font-medium text-gray-700">{info.nextNextBusTime}</div>
+      )}
+
+      {/* 摩的不显示时间线 */}
+      {isMotorcycle && info.isOperating && (
+        <div className="text-center py-2 bg-white/50 rounded-lg">
+          <span className="text-gray-600">随时可乘坐</span>
         </div>
-      </div>
+      )}
 
       {!info.isOperating && (
         <div className="text-center py-2 bg-gray-200/50 rounded-lg">
