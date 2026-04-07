@@ -47,15 +47,23 @@ function BusCard({ info }: { info: NextBusInfo }) {
         </div>
       </div>
 
-      {info.isOperating && info.waitMinutes > 0 && (
-        <div className="text-center py-2 bg-white/50 rounded-lg">
-          <span className="text-gray-600">等待 </span>
-          <span className={`font-bold text-lg ${getStatusBg()}`}>
-            {info.waitMinutes}
-          </span>
-          <span className="text-gray-600"> 分钟</span>
+      {/* 上班 / 当前 / 下班 */}
+      <div className="grid grid-cols-3 gap-2 text-center mb-3">
+        <div className="bg-white/30 rounded-lg py-2">
+          <div className="text-xs text-gray-500 mb-1">上一班</div>
+          <div className="font-medium text-gray-700">{info.prevBusTime}</div>
         </div>
-      )}
+        <div className="bg-white/50 rounded-lg py-2">
+          <div className="text-xs text-gray-500 mb-1">等车</div>
+          <div className={`font-bold ${getStatusBg()}`}>
+            {info.isOperating && info.waitMinutes > 0 ? `${info.waitMinutes}分钟` : '-'}
+          </div>
+        </div>
+        <div className="bg-white/30 rounded-lg py-2">
+          <div className="text-xs text-gray-500 mb-1">下下班</div>
+          <div className="font-medium text-gray-700">{info.nextNextBusTime}</div>
+        </div>
+      </div>
 
       {!info.isOperating && (
         <div className="text-center py-2 bg-gray-200/50 rounded-lg">

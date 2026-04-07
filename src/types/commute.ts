@@ -50,7 +50,9 @@ export interface NextBusInfo {
   transportName: string;
   price: number;
   currentTime: string;          // 当前时间
+  prevBusTime: string;         // 上一班车时间 HH:mm
   nextBusTime: string;         // 下一班车时间 HH:mm
+  nextNextBusTime: string;     // 下下班时间 HH:mm
   waitMinutes: number;         // 等车时间（分钟）
   isOperating: boolean;        // 是否在运营中
   status: 'ok' | 'no-service' | 'off-duty'; // 状态
