@@ -219,23 +219,7 @@ export function getNextBus(
   const dayType = TimeUtils.getDayType(dayOfWeek);
   const shiftType = TimeUtils.getShiftType(currentTimeMinutes);
 
-  // 摩的处理 - 随时可乘坐
-  if (transportType === TransportType.MOTORCYCLE) {
-    return {
-      transportType,
-      transportName: config.name,
-      price: config.price,
-      currentTime,
-      prevBusTime: '-',
-      nextBusTime: '随时',
-      nextNextBusTime: '-',
-      waitMinutes: 0,
-      isOperating: true,
-      status: 'ok'
-    };
-  }
-
-  // 班车/公交处理
+  // 班车/公交/摩的处理
   const schedule = config.routes.find(
     (r: any) => r.dayType === dayType && r.shiftType === shiftType
   );
@@ -246,6 +230,7 @@ export function getNextBus(
       transportType,
       transportName: config.name,
       price: config.price,
+      note: config.note,
       currentTime,
       prevBusTime: '-',
       nextBusTime: '-',
@@ -269,6 +254,7 @@ export function getNextBus(
       transportType,
       transportName: config.name,
       price: config.price,
+      note: config.note,
       currentTime,
       prevBusTime: '-',
       nextBusTime: '已停运',
@@ -286,6 +272,7 @@ export function getNextBus(
     transportType,
     transportName: config.name,
     price: config.price,
+    note: config.note,
     currentTime,
     prevBusTime: busTimes.prevBusTime || '-',
     nextBusTime: busTimes.nextBusTime,

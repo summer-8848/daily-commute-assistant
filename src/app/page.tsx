@@ -34,6 +34,9 @@ function BusCard({ info }: { info: NextBusInfo }) {
             <span className="text-xs text-gray-500">
               {info.price === 0 ? '免费' : `${info.price}元`}
             </span>
+            {info.note && (
+              <span className="ml-1 text-xs text-orange-500">({info.note})</span>
+            )}
           </div>
         </div>
         

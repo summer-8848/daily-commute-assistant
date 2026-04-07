@@ -166,6 +166,7 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
     name: '533路公交（2元）',
     price: 2,
     type: 'bus',
+    note: '时间可能不固定',
     routes: [
       // 533路 - 每天运营
       {
@@ -227,7 +228,65 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
     name: '摩的三轮车（约6元）',
     price: 6,
     type: 'motorcycle',
-    routes: [] // 摩的不需要班次，随时有
+    routes: [
+      // 摩的 - 与C线时间一致
+      // 早班 - 周一至周五
+      {
+        dayType: DayType.WEEKDAY,
+        shiftType: ShiftType.MORNING,
+        firstBusTime: '07:30',
+        lastBusTime: '09:15',
+        intervals: [
+          {
+            startTime: '07:30',
+            endTime: '09:15',
+            intervalMinutes: 15
+          }
+        ]
+      },
+      // 晚班 - 周一至周五
+      {
+        dayType: DayType.WEEKDAY,
+        shiftType: ShiftType.EVENING,
+        firstBusTime: '17:30',
+        lastBusTime: '21:30',
+        intervals: [
+          {
+            startTime: '17:30',
+            endTime: '21:30',
+            intervalMinutes: 15
+          }
+        ]
+      },
+      // 早班 - 周六
+      {
+        dayType: DayType.SATURDAY,
+        shiftType: ShiftType.MORNING,
+        firstBusTime: '07:30',
+        lastBusTime: '09:10',
+        intervals: [
+          {
+            startTime: '07:30',
+            endTime: '09:10',
+            intervalMinutes: 20
+          }
+        ]
+      },
+      // 晚班 - 周六
+      {
+        dayType: DayType.SATURDAY,
+        shiftType: ShiftType.EVENING,
+        firstBusTime: '17:30',
+        lastBusTime: '19:30',
+        intervals: [
+          {
+            startTime: '17:30',
+            endTime: '19:30',
+            intervalMinutes: 20
+          }
+        ]
+      }
+    ]
   }
 ];
 

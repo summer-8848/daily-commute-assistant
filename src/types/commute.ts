@@ -25,6 +25,7 @@ export interface TransportConfig {
   price: number;           // 费用
   type: 'shuttle' | 'bus' | 'motorcycle'; // 交通类型
   routes: RouteSchedule[]; // 班次时刻表
+  note?: string;           // 备注信息
 }
 
 // 路线班次时刻表
@@ -49,6 +50,7 @@ export interface NextBusInfo {
   transportType: TransportType;
   transportName: string;
   price: number;
+  note?: string;               // 备注信息
   currentTime: string;          // 当前时间
   prevBusTime: string;         // 上一班车时间 HH:mm
   nextBusTime: string;         // 下一班车时间 HH:mm
