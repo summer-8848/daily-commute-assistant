@@ -1,65 +1,203 @@
-import Image from "next/image";
+'use client';
+
+import { useState, useEffect } from 'react';
+import { NextBusInfo } from '@/types/commute';
+import { useCurrentTime, useTestMode } from '@/hooks/useUserSettings';
+import { getAllNextBuses } from '@/lib/commute-calculator';
+
+function BusCard({ info }: { info: NextBusInfo }) {
+  const getStatusColor = () => {
+    if (!info.isOperating) return 'bg-gray-100 border-gray-300';
+    if (info.waitMinutes <= 3) return 'bg-green-50 border-green-400';
+    if (info.waitMinutes <= 10) return 'bg-yellow-50 border-yellow-400';
+    return 'bg-blue-50 border-blue-300';
+  };
+
+  const getStatusBg = () => {
+    if (!info.isOperating) return 'text-gray-500';
+    if (info.waitMinutes <= 3) return 'text-green-600';
+    if (info.waitMinutes <= 10) return 'text-yellow-600';
+    return 'text-blue-600';
+  };
+
+  return (
+    <div className={`rounded-xl border-2 p-4 transition-all ${getStatusColor()}`}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">
+            {info.transportType === 'motorcycle' ? '🛵' : '🚌'}
+          </span>
+          <div>
+            <h3 className="font-bold text-gray-900">
+              {info.transportName.split('（')[0]}
+            </h3>
+            <span className="text-xs text-gray-500">
+              {info.price === 0 ? '免费' : `${info.price}元`}
+            </span>
+          </div>
+        </div>
+        
+        <div className="text-right">
+          <div className="text-xs text-gray-500 mb-1">
+            {info.isOperating ? '下一班' : '状态'}
+          </div>
+          <div className={`text-2xl font-bold ${getStatusBg()}`}>
+            {info.nextBusTime}
+          </div>
+        </div>
+      </div>
+
+      {info.isOperating && info.waitMinutes > 0 && (
+        <div className="text-center py-2 bg-white/50 rounded-lg">
+          <span className="text-gray-600">等待 </span>
+          <span className={`font-bold text-lg ${getStatusBg()}`}>
+            {info.waitMinutes}
+          </span>
+          <span className="text-gray-600"> 分钟</span>
+        </div>
+      )}
+
+      {!info.isOperating && (
+        <div className="text-center py-2 bg-gray-200/50 rounded-lg">
+          <span className="text-gray-500 text-sm">
+            {info.status === 'off-duty' ? '今日已停运' : '当前无服务'}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TestModePanel({ 
+  useCustomTime, 
+  onToggle,
+  customTime,
+  onCustomTimeChange,
+  customDate,
+  onCustomDateChange
+}: {
+  useCustomTime: boolean;
+  onToggle: (v: boolean) => void;
+  customTime: string;
+  onCustomTimeChange: (v: string) => void;
+  customDate: string;
+  onCustomDateChange: (v: string) => void;
+}) {
+  return (
+    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+      <div className="flex items-center gap-2 mb-2">
+        <input
+          type="checkbox"
+          id="testMode"
+          checked={useCustomTime}
+          onChange={(e) => onToggle(e.target.checked)}
+          className="rounded"
+        />
+        <label htmlFor="testMode" className="text-sm font-medium text-yellow-800">
+          测试模式：自定义时间
+        </label>
+      </div>
+      
+      {useCustomTime && (
+        <div className="grid grid-cols-2 gap-2">
+          <input
+            type="date"
+            value={customDate}
+            onChange={(e) => onCustomDateChange(e.target.value)}
+            className="px-2 py-1 border border-yellow-300 rounded text-sm"
+          />
+          <input
+            type="time"
+            value={customTime}
+            onChange={(e) => onCustomTimeChange(e.target.value)}
+            className="px-2 py-1 border border-yellow-300 rounded text-sm"
+          />
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Home() {
+  const { currentTime, currentDate, currentDayOfWeek } = useCurrentTime();
+  const { 
+    useCustomTime, 
+    setUseCustomTime, 
+    customTime, 
+    setCustomTime, 
+    customDate, 
+    setCustomDate,
+    getEffectiveTime,
+    getEffectiveDate,
+    isTestMode,
+    initialized
+  } = useTestMode();
+
+  const [busInfos, setBusInfos] = useState<NextBusInfo[]>([]);
+
+  useEffect(() => {
+    if (!initialized) return;
+    
+    const time = getEffectiveTime();
+    const date = getEffectiveDate();
+    const infos = getAllNextBuses(time, date);
+    setBusInfos(infos);
+  }, [initialized, getEffectiveTime, getEffectiveDate]);
+
+  if (!initialized) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin text-6xl mb-4">⏳</div>
+          <p className="text-gray-600">加载中...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+      <div className="max-w-md mx-auto">
+        {/* 标题 */}
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">公交到站时间</h1>
+          <p className="text-sm text-gray-600">实时显示各线路下一班公交车</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* 当前时间 */}
+        <div className="bg-white rounded-xl shadow-md p-4 mb-4">
+          <div className="text-center">
+            <div className="text-sm text-gray-500 mb-1">{currentDate} {currentDayOfWeek}</div>
+            <div className="text-4xl font-bold text-blue-600">
+              {isTestMode && useCustomTime ? customTime : currentTime}
+            </div>
+          </div>
         </div>
-      </main>
+
+        {/* 测试模式 */}
+        {isTestMode && (
+          <TestModePanel
+            useCustomTime={useCustomTime}
+            onToggle={setUseCustomTime}
+            customTime={customTime}
+            onCustomTimeChange={setCustomTime}
+            customDate={customDate}
+            onCustomDateChange={setCustomDate}
+          />
+        )}
+
+        {/* 公交列表 */}
+        <div className="space-y-3">
+          {busInfos.map((info) => (
+            <BusCard key={info.transportType} info={info} />
+          ))}
+        </div>
+
+        {/* 底部信息 */}
+        <div className="mt-6 text-center text-xs text-gray-400">
+          数据仅供参考，请以实际为准
+        </div>
+      </div>
     </div>
   );
 }

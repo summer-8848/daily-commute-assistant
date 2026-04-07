@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 公交到站时间
 
-## Getting Started
+实时显示各线路下一班公交车到站时间的 H5 应用。
 
-First, run the development server:
+## 功能特性
+
+- 🚌 **多交通方式**：B线/C线班车、533路公交、摩的三轮车
+- ⏱️ **实时倒计时**：显示距离下一班车的等待时间
+- 🎨 **状态提示**：根据等待时长显示不同颜色（≤3分钟绿色，≤10分钟黄色，其他蓝色）
+- 📱 **移动端优化**：专为 H5 设计，响应式布局
+- 🆓 **完全免费**：无需注册，无需付费
+
+## 交通方式
+
+### B线班车（免费）
+| 班次 | 适用日期 | 运营时间 | 发车间隔规则 |
+|------|----------|----------|--------------|
+| 早班 | 工作日（周一至周五） | 07:30 - 09:15 | 07:30-09:00 每8分钟；09:00后每8分钟，9:07、9:15各一班 |
+| 晚班 | 工作日 | 17:30 - 21:00 | 17:30-19:30 每8分钟；19:30后每30分钟 |
+| 早班 | 周六 | 07:30 - 09:02 | 每23分钟 |
+| 晚班 | 周六 | 17:30 - 19:30 | 每23分钟 |
+
+### C线班车（免费）
+| 班次 | 适用日期 | 运营时间 | 发车间隔规则 |
+|------|----------|----------|--------------|
+| 早班 | 工作日 | 07:30 - 09:15 | 07:30-09:06 每8分钟；09:06-09:15 每9分钟 |
+| 晚班 | 工作日 | 17:30 - 21:30 | 17:30-18:50 每8分钟；18:50-19:00 每10分钟；19:00-19:30 每15分钟；19:30后每40分钟 |
+| 早班 | 周六 | 07:30 - 09:10 | 每20分钟 |
+| 晚班 | 周六 | 17:30 - 19:30 | 每20分钟 |
+
+### 533路公交（2元）
+- 运营时间：06:00 - 21:30（每天）
+- 发车间隔：固定10分钟
+
+### 摩的三轮车（约6元）
+- 特点：随时可乘坐，无固定班次
+- 候车时间：默认3分钟
+
+## 本地开发
+
+### 1. 安装依赖
+
+```bash
+npm install
+```
+
+### 2. 启动开发服务器
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+打开 [http://localhost:3000](http://localhost:3000) 查看应用。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. 构建生产版本
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+## 计算规则
 
-To learn more about Next.js, take a look at the following resources:
+### 班次判断
+- 星期判断：0=周日，6=周六，其他=工作日
+- 班次判断：12:00前为早班，之后为晚班
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 下一班车计算
+1. 若当前时间早于首班，返回首班时间
+2. 若当前时间晚于末班，返回"已停运"
+3. 在运营时间内，根据发车间隔计算下一班车
+4. 特殊班次（如9:07、9:15）优先检查
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 许可证
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
