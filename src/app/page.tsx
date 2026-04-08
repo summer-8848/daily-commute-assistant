@@ -10,107 +10,139 @@ function BusCard({ info }: { info: NextBusInfo }) {
   const isMotorcycle = info.transportType === 'motorcycle';
 
   const getStatusColor = () => {
-    if (!info.isOperating) return 'bg-gray-100 border-gray-300';
-    if (info.waitMinutes <= 3) return 'bg-green-50 border-green-400';
-    if (info.waitMinutes <= 10) return 'bg-yellow-50 border-yellow-400';
-    return 'bg-blue-50 border-blue-300';
+    if (!info.isOperating) return 'bg-slate-50 border-slate-200';
+    if (info.waitMinutes <= 3) return 'bg-emerald-50 border-emerald-300';
+    if (info.waitMinutes <= 10) return 'bg-amber-50 border-amber-300';
+    return 'bg-blue-50 border-blue-200';
   };
 
   const getStatusBg = () => {
-    if (!info.isOperating) return 'text-gray-500';
-    if (info.waitMinutes <= 3) return 'text-green-600';
-    if (info.waitMinutes <= 10) return 'text-yellow-600';
+    if (!info.isOperating) return 'text-slate-400';
+    if (info.waitMinutes <= 3) return 'text-emerald-600';
+    if (info.waitMinutes <= 10) return 'text-amber-600';
+    return 'text-blue-500';
+  };
+
+  const getIconText = () => {
+    if (!info.isOperating) return 'text-slate-400';
+    if (info.waitMinutes <= 3) return 'text-emerald-600';
+    if (info.waitMinutes <= 10) return 'text-amber-600';
     return 'text-blue-600';
   };
 
-  // 自动滚动到当前时间位置
+  // 自动滚动到当前/下一班时间位置
   useEffect(() => {
-    if (scrollRef.current && !isMotorcycle) {
-      const currentElement = scrollRef.current.querySelector('[data-is-current="true"]') as HTMLElement;
-      if (currentElement) {
-        const containerWidth = scrollRef.current.offsetWidth;
-        const elementLeft = currentElement.offsetLeft;
-        const elementWidth = currentElement.offsetWidth;
-        scrollRef.current.scrollTo({
-          left: elementLeft - containerWidth / 2 + elementWidth / 2,
-          behavior: 'smooth'
-        });
-      }
-    }
-  });
+    if (!scrollRef.current || isMotorcycle || info.allDepartures.length === 0) return;
+
+    const scrollContainer = scrollRef.current;
+
+    // 找到下一班（isNext=true），如果没找到则用第一个（时间在所有班次之外）
+    let targetIndex = info.allDepartures.findIndex(d => d.isNext);
+    if (targetIndex === -1) targetIndex = 0;
+
+    // 延迟滚动确保 DOM 已渲染
+    const timer = setTimeout(() => {
+      const containerWidth = scrollContainer.offsetWidth;
+      const containerScrollWidth = scrollContainer.scrollWidth;
+      const children = scrollContainer.children;
+      if (children.length === 0 || targetIndex >= children.length) return;
+
+      const targetElement = children[targetIndex] as HTMLElement;
+      const elementWidth = targetElement.offsetWidth;
+      const elementLeft = targetElement.offsetLeft;
+
+      // 计算滚动位置使目标居中，边界保护
+      let scrollLeft = elementLeft - containerWidth / 2 + elementWidth / 2;
+      scrollLeft = Math.max(0, Math.min(scrollLeft, containerScrollWidth - containerWidth));
+
+      scrollContainer.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [info.allDepartures, info.currentMinutes, isMotorcycle]);
 
   return (
-    <div className={`rounded-xl border-2 p-4 transition-all ${getStatusColor()}`}>
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <span className="text-2xl">
-            {isMotorcycle ? '🛵' : '🚌'}
-          </span>
+    <div className={`rounded-2xl border-2 p-5 transition-all shadow-sm hover:shadow-md ${getStatusColor()}`}>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${isMotorcycle ? 'bg-orange-100' : getStatusColor().split(' ')[0]}`}>
+            <span className={isMotorcycle ? '' : getIconText()}>{isMotorcycle ? '🛵' : '🚌'}</span>
+          </div>
           <div>
-            <h3 className="font-bold text-gray-900">
+            <h3 className="font-bold text-slate-800 text-lg">
               {info.transportName.split('（')[0]}
             </h3>
-            <span className="text-xs text-gray-500">
-              {info.price === 0 ? '免费' : `${info.price}元`}
-            </span>
-            {info.note && (
-              <span className="ml-1 text-xs text-orange-500">({info.note})</span>
-            )}
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-slate-400">
+                {info.price === 0 ? '免费' : `${info.price}元`}
+              </span>
+              {info.note && (
+                <span className="ml-1 text-xs text-amber-500 font-medium">({info.note})</span>
+              )}
+            </div>
           </div>
         </div>
-        
-        <div className="text-right">
-          <div className="text-xs text-gray-500 mb-1">
-            {info.isOperating ? '下一班' : '状态'}
+
+        {!isMotorcycle && (
+          <div className="text-right">
+            <div className="text-xs text-slate-400 mb-1">
+              {info.isOperating ? '下一班' : '状态'}
+            </div>
+            <div className={`text-3xl font-bold ${getStatusBg()}`}>
+              {info.nextBusTime}
+            </div>
           </div>
-          <div className={`text-2xl font-bold ${getStatusBg()}`}>
-            {info.nextBusTime}
-          </div>
-        </div>
+        )}
       </div>
 
       {/* 发车时间横向滚动列表 */}
       {!isMotorcycle && info.allDepartures.length > 0 && (
-        <div className="mb-3">
+        <div className="mb-2">
           {/* 上一班/等车/下下班标记 */}
-          <div className="flex overflow-x-auto gap-1 mb-1 scrollbar-hide" ref={scrollRef}>
-            {info.allDepartures.map((dep) => (
-              <div key={dep.time} className="flex flex-col items-center flex-shrink-0">
-                {/* 标记 */}
-                <div className="h-5 flex items-center">
-                  {dep.isPrev && <span className="text-xs text-gray-500">上一班</span>}
-                  {dep.isNext && <span className="text-xs text-green-600 font-medium">下一班{info.waitMinutes > 0 ? `(${info.waitMinutes}分钟)` : ''}</span>}
-                  {dep.isNextNext && <span className="text-xs text-gray-500">下下一班</span>}
+          <div className="relative">
+            {/* 时间线 */}
+            <div className="absolute top-6 left-0 right-0 h-0.5 bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 rounded-full mx-4" />
+            <div className="flex overflow-x-auto gap-2 pt-6 pb-1 scrollbar-hide" ref={scrollRef} style={{ scrollSnapType: 'x proximity' }}>
+              {info.allDepartures.map((dep, idx) => (
+                <div key={dep.time} data-index={idx} className={`flex flex-col items-center flex-shrink-0 relative ${dep.isNext ? 'z-10' : ''}`} style={{ scrollSnapAlign: 'center' }}>
+                  {/* 标记 */}
+                  <div className="h-6 flex items-center mb-1">
+                    {dep.isPrev && <span className="text-xs text-slate-400 font-medium">上一班</span>}
+                    {dep.isNext && <span className="text-xs text-emerald-600 font-bold whitespace-nowrap">下一班{info.waitMinutes > 0 ? ` · ${info.waitMinutes}分钟` : ''}</span>}
+                    {dep.isNextNext && <span className="text-xs text-blue-400 font-medium">下下一班</span>}
+                  </div>
+                  {/* 时间气泡 */}
+                  <div
+                    data-is-current={dep.isNext}
+                    className={`
+                      relative px-3 py-1.5 rounded-xl text-sm font-semibold min-w-[56px] text-center transition-all duration-200
+                      ${dep.isPrev ? 'bg-slate-100 text-slate-400' : ''}
+                      ${dep.isNext ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200 scale-110 z-10 ring-2 ring-emerald-400 ring-offset-1' : ''}
+                      ${dep.isNextNext ? 'bg-blue-100 text-blue-600' : ''}
+                      ${!dep.isPrev && !dep.isNext && !dep.isNextNext ? 'bg-white/80 text-slate-500 shadow-sm' : ''}
+                    `}
+                  >
+                    {dep.time}
+                  </div>
+                  {/* 时间点圆点 */}
+                  <div className={`absolute bottom-0 w-2.5 h-2.5 rounded-full border-2 transition-all ${dep.isNext ? 'bg-emerald-500 border-emerald-400 scale-150' : dep.isPrev ? 'bg-slate-300 border-slate-200' : dep.isNextNext ? 'bg-blue-400 border-blue-300' : 'bg-white border-slate-300'}`} />
                 </div>
-                {/* 时间 */}
-                <div
-                  data-is-current={dep.isNext}
-                  className={`
-                    px-2 py-1 rounded text-sm font-medium min-w-[50px] text-center
-                    ${dep.isPrev ? 'bg-gray-100 text-gray-500' : ''}
-                    ${dep.isNext ? 'bg-green-100 text-green-700 border-2 border-green-400' : ''}
-                    ${dep.isNextNext ? 'bg-blue-50 text-blue-600' : ''}
-                    ${!dep.isPrev && !dep.isNext && !dep.isNextNext ? 'bg-white/50 text-gray-600' : ''}
-                  `}
-                >
-                  {dep.time}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       )}
 
       {/* 摩的不显示时间线 */}
       {isMotorcycle && info.isOperating && (
-        <div className="text-center py-2 bg-white/50 rounded-lg">
-          <span className="text-gray-600">随时可乘坐</span>
+        <div className="text-center py-3 bg-white/60 rounded-xl">
+          <span className="text-slate-500 font-medium">随时可乘坐</span>
         </div>
       )}
 
       {!info.isOperating && (
-        <div className="text-center py-2 bg-gray-200/50 rounded-lg">
-          <span className="text-gray-500 text-sm">
+        <div className="text-center py-3 bg-slate-100/60 rounded-xl">
+          <span className="text-slate-400 text-sm">
             {info.status === 'off-duty' ? '今日已停运' : '当前无服务'}
           </span>
         </div>
@@ -213,31 +245,34 @@ export default function Home() {
 
   if (!initialized) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin text-6xl mb-4">⏳</div>
-          <p className="text-gray-600">加载中...</p>
+          <p className="text-slate-500">加载中...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 py-8 px-4">
       <div className="max-w-md mx-auto">
         {/* 标题 */}
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">公交到站时间</h1>
-          <p className="text-sm text-gray-600">实时显示各线路下一班公交车</p>
+          <h1 className="text-3xl font-bold text-slate-800 mb-1">公交到站时间</h1>
+          <p className="text-sm text-slate-500">实时显示各线路下一班公交车</p>
         </div>
 
         {/* 当前时间 */}
-        <div className="bg-white rounded-xl shadow-md p-4 mb-4">
+        <div className="bg-white rounded-2xl shadow-lg p-5 mb-5 border border-slate-100">
           <div className="text-center">
-            <div className="text-sm text-gray-500 mb-1">{currentDate} {currentDayOfWeek}</div>
-            <div className="text-4xl font-bold text-blue-600">
+            <div className="text-sm text-slate-400 mb-2 font-medium">{currentDate} {currentDayOfWeek}</div>
+            <div className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               {isTestMode && useCustomTime ? customTime : currentTime}
             </div>
+            {isTestMode && useCustomTime && (
+              <div className="mt-2 text-xs text-amber-500 font-medium">测试模式</div>
+            )}
           </div>
         </div>
 
@@ -254,14 +289,14 @@ export default function Home() {
         )}
 
         {/* 公交列表 */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           {busInfos.map((info) => (
             <BusCard key={info.transportType} info={info} />
           ))}
         </div>
 
         {/* 底部信息 */}
-        <div className="mt-6 text-center text-xs text-gray-400">
+        <div className="mt-8 text-center text-xs text-slate-300">
           数据仅供参考，请以实际为准
         </div>
       </div>
