@@ -79,7 +79,7 @@ function BusCard({ info }: { info: NextBusInfo }) {
                 {/* 标记 */}
                 <div className="h-5 flex items-center">
                   {dep.isPrev && <span className="text-xs text-gray-500">上一班</span>}
-                  {dep.isNext && <span className="text-xs text-green-600 font-medium">等车</span>}
+                  {dep.isNext && <span className="text-xs text-green-600 font-medium">下一班{info.waitMinutes > 0 ? `(${info.waitMinutes}分钟)` : ''}</span>}
                   {dep.isNextNext && <span className="text-xs text-gray-500">下下一班</span>}
                 </div>
                 {/* 时间 */}
@@ -208,7 +208,8 @@ export default function Home() {
     const date = getEffectiveDate();
     const infos = getAllNextBuses(time, date);
     setBusInfos(infos);
-  }, [initialized, getEffectiveTime, getEffectiveDate]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialized, getEffectiveTime, getEffectiveDate, currentTime]);
 
   if (!initialized) {
     return (
