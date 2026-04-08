@@ -186,6 +186,21 @@ export default function Home() {
 
   const [busInfos, setBusInfos] = useState<NextBusInfo[]>([]);
 
+  // 检测页面可见性变化，切回前台时自动刷新
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        const time = getEffectiveTime();
+        const date = getEffectiveDate();
+        const infos = getAllNextBuses(time, date);
+        setBusInfos(infos);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [getEffectiveTime, getEffectiveDate]);
+
   useEffect(() => {
     if (!initialized) return;
     
