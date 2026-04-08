@@ -353,7 +353,7 @@ export function getNextBus(
     }
     if (markedDepartures[i].isNext) {
       nextBusTime = markedDepartures[i].time;
-      waitMinutes = markedDepartures[i].minutes - currentTimeMinutes;
+      waitMinutes = Math.round(markedDepartures[i].minutes - currentTimeMinutes);
     }
     if (markedDepartures[i].isNextNext) {
       nextNextBusTime = markedDepartures[i].time;
