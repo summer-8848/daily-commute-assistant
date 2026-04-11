@@ -29,7 +29,9 @@ export class TimeUtils {
 
   // 根据日期判断天类型
   static getDayType(dayOfWeek: number): DayType {
-    return dayOfWeek === 6 ? DayType.SATURDAY : DayType.WEEKDAY;
+    if (dayOfWeek === 0) return DayType.SUNDAY;
+    if (dayOfWeek === 6) return DayType.SATURDAY;
+    return DayType.WEEKDAY;
   }
 
   // 判断班次类型（根据当前时间）

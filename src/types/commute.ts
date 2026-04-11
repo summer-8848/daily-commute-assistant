@@ -11,7 +11,8 @@ export enum TransportType {
 // 天类型
 export enum DayType {
   WEEKDAY = 'weekday',     // 周一至周五
-  SATURDAY = 'saturday'    // 周六
+  SATURDAY = 'saturday',   // 周六
+  SUNDAY = 'sunday'        // 周日
 }
 
 // 班次类型
