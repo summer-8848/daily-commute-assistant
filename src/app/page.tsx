@@ -7,7 +7,7 @@ import { getAllNextBuses } from '@/lib/commute-calculator';
 
 function BusCard({ info }: { info: NextBusInfo }) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const isOnDemand = ['motorcycle', 'bicycle', 'electric-scooter'].includes(info.transportType);
+  const isOnDemand = ['motorcycle', 'bicycle', 'electric-scooter'].includes(info.type);
 
   const getStatusColor = () => {
     if (!info.isOperating) return 'bg-slate-50 border-slate-200';
@@ -135,18 +135,10 @@ function BusCard({ info }: { info: NextBusInfo }) {
         </div>
       )}
 
-      {/* 摩的不显示时间线 */}
+      {/* 不显示时间线 */}
       {isOnDemand && info.isOperating && (
         <div className="text-center py-3 bg-white/60 rounded-xl">
           <span className="text-slate-500 font-medium">遇到了，别错过</span>
-        </div>
-      )}
-
-      {!info.isOperating && (
-        <div className="text-center py-3 bg-slate-100/60 rounded-xl">
-          <span className="text-slate-400 text-sm">
-            {info.status === 'off-duty' ? '今日已停运' : '当前无服务'}
-          </span>
         </div>
       )}
     </div>

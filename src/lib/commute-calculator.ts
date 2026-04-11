@@ -318,6 +318,7 @@ export function getNextBus(
   if (!config.routes || config.routes.length === 0) {
     return {
       transportType,
+      type: config.type,
       transportName: config.name,
       price: config.price,
       note: config.note,
@@ -338,6 +339,7 @@ export function getNextBus(
   if (!schedule) {
     return {
       transportType,
+      type: config.type,
       transportName: config.name,
       price: config.price,
       note: config.note,
@@ -385,6 +387,7 @@ export function getNextBus(
   if (!nextBusTime) {
     return {
       transportType,
+      type: config.type,
       transportName: config.name,
       price: config.price,
       note: config.note,
@@ -403,6 +406,7 @@ export function getNextBus(
 
   return {
     transportType,
+    type: config.type,
     transportName: config.name,
     price: config.price,
     note: config.note,

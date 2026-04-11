@@ -26,7 +26,7 @@ export interface TransportConfig {
   name: string;            // 显示名称
   price: number;           // 费用
   type: 'shuttle' | 'bus' | 'motorcycle' | 'bicycle' | 'electric-scooter'; // 交通类型
-  routes?: RouteSchedule[]; // 班次时刻表（摩的/自行车等按需交通方式无需配置）
+  routes?: RouteSchedule[]; // 班次时刻表
   note?: string;           // 备注信息
   icon?: string;           // 图标 emoji
 }
@@ -61,6 +61,7 @@ export interface DepartureTime {
 // 下一班信息
 export interface NextBusInfo {
   transportType: TransportType;
+  type: 'shuttle' | 'bus' | 'motorcycle' | 'bicycle' | 'electric-scooter';
   transportName: string;
   price: number;
   note?: string;               // 备注信息
