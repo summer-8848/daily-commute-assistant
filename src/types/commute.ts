@@ -28,6 +28,7 @@ export interface TransportConfig {
   type: 'shuttle' | 'bus' | 'motorcycle' | 'bicycle' | 'electric-scooter'; // 交通类型
   routes: RouteSchedule[]; // 班次时刻表
   note?: string;           // 备注信息
+  icon?: string;           // 图标 emoji
 }
 
 // 路线班次时刻表
@@ -63,6 +64,7 @@ export interface NextBusInfo {
   transportName: string;
   price: number;
   note?: string;               // 备注信息
+  icon?: string;              // 图标 emoji
   currentTime: string;          // 当前时间
   currentMinutes: number;       // 当前分钟数
   allDepartures: DepartureTime[]; // 所有发车时间

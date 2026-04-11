@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { NextBusInfo, TransportType } from '@/types/commute';
+import { NextBusInfo } from '@/types/commute';
 import { useCurrentTime, useTestMode } from '@/hooks/useUserSettings';
 import { getAllNextBuses } from '@/lib/commute-calculator';
 
@@ -67,7 +67,7 @@ function BusCard({ info }: { info: NextBusInfo }) {
         <div className="flex items-center gap-3">
           <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${isOnDemand ? 'bg-orange-100' : getStatusColor().split(' ')[0]}`}>
             <span className={isOnDemand ? '' : getIconText()}>
-              {info.transportType === TransportType.MOTORCYCLE ? '🛵' : info.transportType === TransportType.SHARED_BICYCLE ? '🚲' : '⚡️'}
+              {info.icon ?? '🚌'}
             </span>
           </div>
           <div>

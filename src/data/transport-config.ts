@@ -7,6 +7,7 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
     name: 'B线班车（免费）',
     price: 0,
     type: 'shuttle',
+    icon: '🚌',
     routes: [
       // B线 早班 - 周一至周五
       {
@@ -82,6 +83,7 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
     name: 'C线班车（免费）',
     price: 0,
     type: 'shuttle',
+    icon: '🚌',
     routes: [
       // C线 早班 - 周一至周五
       {
@@ -166,6 +168,7 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
     name: '533路公交（2元）',
     price: 2,
     type: 'bus',
+    icon: '🚌',
     note: '6:00-19:30，约15分钟/班',
     routes: [
       // 533路 - 每天运营
@@ -228,6 +231,7 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
     name: '摩的三轮车（约6元）',
     price: 6,
     type: 'motorcycle',
+    icon: '🛵',
     routes: [
       // 摩的 - 与C线时间一致
       // 早班 - 周一至周五
@@ -293,6 +297,7 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
     name: '共享自行车（30分钟内1.5元）',
     price: 1.5,
     type: 'bicycle',
+    icon: '🚲',
     routes: [
       // 共享自行车 - 24小时运营
       {
@@ -354,6 +359,7 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
     name: '共享电瓶车（20分钟内2.5元）',
     price: 2.5,
     type: 'electric-scooter',
+    icon: '⚡️',
     routes: [
       // 共享电瓶车 - 24小时运营
       {
