@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { NextBusInfo } from '@/types/commute';
 import { useCurrentTime, useTestMode } from '@/hooks/useUserSettings';
 import { getAllNextBuses } from '@/lib/commute-calculator';
@@ -213,7 +213,7 @@ export default function Home() {
 
   const [busInfos, setBusInfos] = useState<NextBusInfo[]>([]);
 
-  const currentShiftLabel = (() => {
+  const currentShiftLabel = useMemo(() => {
     const time = getEffectiveTime();
     const [hours, minutes] = time.split(':').map(Number);
     const mins = hours * 60 + minutes;
@@ -223,7 +223,7 @@ export default function Home() {
       return mins >= eveningEnd ? '明天上班' : '今天上班';
     }
     return '今天下班';
-  })();
+  }, [getEffectiveTime]);
 
   // 检测页面可见性变化，切回前台时自动刷新
   useEffect(() => {
