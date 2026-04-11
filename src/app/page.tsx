@@ -72,13 +72,8 @@ function BusCard({ info }: { info: NextBusInfo }) {
             </span>
           </div>
           <div>
-            <h3 className="font-bold text-slate-800 text-lg flex items-center gap-2">
+            <h3 className="font-bold text-slate-800 text-lg">
               {info.transportName}
-              {info.shiftLabel && (
-                <span className="text-xs font-medium px-2 py-0.5 bg-blue-100 text-blue-600 rounded-full">
-                  {info.shiftLabel}
-                </span>
-              )}
             </h3>
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-400">
@@ -218,6 +213,16 @@ export default function Home() {
 
   const [busInfos, setBusInfos] = useState<NextBusInfo[]>([]);
 
+  const currentShiftLabel = (() => {
+    const time = getEffectiveTime();
+    const [hours, minutes] = time.split(':').map(Number);
+    const mins = hours * 60 + minutes;
+    const morningEnd = 9.5 * 60;
+    const eveningEnd = 21.5 * 60;
+    if (mins < morningEnd || mins >= eveningEnd) return '上班';
+    return '下班';
+  })();
+
   // 检测页面可见性变化，切回前台时自动刷新
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -266,7 +271,12 @@ export default function Home() {
         {/* 当前时间 */}
         <div className="bg-white rounded-2xl shadow-lg p-5 mb-5 border border-slate-100">
           <div className="text-center">
-            <div className="text-sm text-slate-400 mb-2 font-medium">{currentDate} {currentDayOfWeek}</div>
+            <div className="text-sm text-slate-400 mb-2 font-medium">
+              {currentDate} {currentDayOfWeek}
+              <span className="ml-2 text-xs font-medium px-2 py-0.5 bg-blue-100 text-blue-600 rounded-full">
+                {currentShiftLabel}
+              </span>
+            </div>
             <div className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               {isTestMode && useCustomTime ? customTime : currentTime}
             </div>
