@@ -314,6 +314,26 @@ export function getNextBus(
     (r: any) => r.dayType === dayType && r.shiftType === shiftType
   );
 
+  // 如果没有 routes（按需交通），始终在运营状态
+  if (!schedule && !config.routes) {
+    return {
+      transportType,
+      transportName: config.name,
+      price: config.price,
+      note: config.note,
+      icon: config.icon,
+      currentTime,
+      currentMinutes: currentTimeMinutes,
+      allDepartures: [],
+      prevBusTime: '-',
+      nextBusTime: '-',
+      nextNextBusTime: '-',
+      waitMinutes: 0,
+      isOperating: true,
+      status: 'ok'
+    };
+  }
+
   // 如果没有找到时刻表
   if (!schedule) {
     return {
