@@ -310,15 +310,16 @@ export function getNextBus(
   if (!config) return null;
 
   const currentTimeMinutes = TimeUtils.timeToMinutes(currentTime);
-  const dayOfWeek = TimeUtils.getCurrentDayOfWeek(currentDate);
-  const dayType = TimeUtils.getDayType(dayOfWeek);
-  const shiftType = TimeUtils.getShiftType(currentTimeMinutes);
+  const eveningEnd = 21.5 * 60;
 
   // 21:30后显示次日早班，将时间往前拨一天以便计算下一班
-  const eveningEnd = 21.5 * 60;
-  const effectiveMinutes = shiftType === ShiftType.MORNING && currentTimeMinutes >= eveningEnd
+  const effectiveMinutes = currentTimeMinutes >= eveningEnd
     ? currentTimeMinutes - 24 * 60
     : currentTimeMinutes;
+
+  const dayOfWeek = TimeUtils.getCurrentDayOfWeek(currentDate);
+  const dayType = TimeUtils.getDayType(dayOfWeek);
+  const shiftType = TimeUtils.getShiftType(effectiveMinutes);
 
   // 班车/公交/摩的处理
   const schedule = config.routes?.find(
