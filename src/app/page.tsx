@@ -12,9 +12,7 @@ function BusCard({ info }: { info: NextBusInfo }) {
 
   const formatWaitTime = (minutes: number) => {
     if (minutes < 60) return `${minutes}分钟`;
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
-    return m > 0 ? `${h}小时${m}分钟` : `${h}小时`;
+    return '还早';
   };
 
   const getStatusColor = () => {
