@@ -314,8 +314,8 @@ export function getNextBus(
     (r: any) => r.dayType === dayType && r.shiftType === shiftType
   );
 
-  // 如果没有 routes（按需交通），始终在运营状态
-  if (!schedule && !config.routes) {
+  // 如果没有 routes 或 routes 为空（按需交通），始终在运营状态
+  if (!config.routes || config.routes.length === 0) {
     return {
       transportType,
       transportName: config.name,
