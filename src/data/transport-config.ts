@@ -231,7 +231,7 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
     name: '摩的三轮车（约6元）',
     price: 6,
     type: 'motorcycle',
-    icon: '🛵',
+    icon: '🛺',
     routes: [
       // 摩的 - 与C线时间一致
       // 早班 - 周一至周五
@@ -359,7 +359,7 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
     name: '共享电瓶车（20分钟内2.5元）',
     price: 2.5,
     type: 'electric-scooter',
-    icon: '⚡️',
+    icon: '🛵',
     routes: [
       // 共享电瓶车 - 24小时运营
       {
