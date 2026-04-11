@@ -4,8 +4,8 @@ import { TransportConfig, TransportType, DayType, ShiftType } from '@/types/comm
 export const TRANSPORT_CONFIGS: TransportConfig[] = [
   {
     id: TransportType.SHUTTLE_B,
-    name: 'B线班车（免费）',
-    price: '0',
+    name: 'B线班车',
+    price: '免费',
     type: 'shuttle',
     icon: '🚌',
     routes: [
@@ -80,8 +80,8 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
   },
   {
     id: TransportType.SHUTTLE_C,
-    name: 'C线班车（免费）',
-    price: '0',
+    name: 'C线班车',
+    price: '免费',
     type: 'shuttle',
     icon: '🚌',
     routes: [
@@ -165,11 +165,11 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
   },
   {
     id: TransportType.BUS_533,
-    name: '533路公交（2元）',
-    price: '2',
+    name: '533路公交',
+    price: '2元',
     type: 'bus',
     icon: '🚌',
-    note: '6:00-19:30，约15分钟/班',
+    note: '约15分钟/班',
     routes: [
       // 533路 - 每天运营
       {
@@ -228,22 +228,22 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
   },
   {
     id: TransportType.MOTORCYCLE,
-    name: '摩的三轮车（约6元）',
-    price: '6',
+    name: '摩的三轮车',
+    price: '6块',
     type: 'motorcycle',
     icon: '🛺'
   },
   {
     id: TransportType.SHARED_BICYCLE,
-    name: '共享自行车（30分钟内1.5元）',
-    price: '1.5',
+    name: '共享自行车',
+    price: '30分钟内1.5元',
     type: 'bicycle',
     icon: '🚲'
   },
   {
     id: TransportType.SHARED_ELECTRIC_SCOOTER,
-    name: '共享电瓶车（20分钟内2.5元）',
-    price: '2.5',
+    name: '共享电瓶车',
+    price: '20分钟内2.5元',
     type: 'electric-scooter',
     icon: '🛵'
   }
