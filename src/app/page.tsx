@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { NextBusInfo } from '@/types/commute';
+import { NextBusInfo, TransportType } from '@/types/commute';
 import { useCurrentTime, useTestMode } from '@/hooks/useUserSettings';
 import { getAllNextBuses } from '@/lib/commute-calculator';
 
 function BusCard({ info }: { info: NextBusInfo }) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const isMotorcycle = info.transportType === 'motorcycle';
+  const isOnDemand = ['motorcycle', 'bicycle', 'electric-scooter'].includes(info.transportType);
 
   const getStatusColor = () => {
     if (!info.isOperating) return 'bg-slate-50 border-slate-200';
@@ -32,7 +32,7 @@ function BusCard({ info }: { info: NextBusInfo }) {
 
   // 自动滚动到当前/下一班时间位置
   useEffect(() => {
-    if (!scrollRef.current || isMotorcycle || info.allDepartures.length === 0) return;
+    if (!scrollRef.current || isOnDemand || info.allDepartures.length === 0) return;
 
     const scrollContainer = scrollRef.current;
 
@@ -59,14 +59,16 @@ function BusCard({ info }: { info: NextBusInfo }) {
     }, 150);
 
     return () => clearTimeout(timer);
-  }, [info.allDepartures, info.currentMinutes, isMotorcycle]);
+  }, [info.allDepartures, info.currentMinutes, isOnDemand]);
 
   return (
     <div className={`rounded-2xl border-2 p-5 transition-all shadow-sm hover:shadow-md ${getStatusColor()}`}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${isMotorcycle ? 'bg-orange-100' : getStatusColor().split(' ')[0]}`}>
-            <span className={isMotorcycle ? '' : getIconText()}>{isMotorcycle ? '🛵' : '🚌'}</span>
+          <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${isOnDemand ? 'bg-orange-100' : getStatusColor().split(' ')[0]}`}>
+            <span className={isOnDemand ? '' : getIconText()}>
+              {info.transportType === TransportType.MOTORCYCLE ? '🛵' : info.transportType === TransportType.SHARED_BICYCLE ? '🚲' : '⚡️'}
+            </span>
           </div>
           <div>
             <h3 className="font-bold text-slate-800 text-lg">
@@ -83,7 +85,7 @@ function BusCard({ info }: { info: NextBusInfo }) {
           </div>
         </div>
 
-        {!isMotorcycle && (
+        {!isOnDemand && (
           <div className="text-right">
             <div className="text-xs text-slate-400 mb-1">
               {info.isOperating ? '下一班' : '状态'}
@@ -96,7 +98,7 @@ function BusCard({ info }: { info: NextBusInfo }) {
       </div>
 
       {/* 发车时间横向滚动列表 */}
-      {!isMotorcycle && info.allDepartures.length > 0 && (
+      {!isOnDemand && info.allDepartures.length > 0 && (
         <div className="mb-2">
           {/* 上一班/等车/下下班标记 */}
           <div className="relative">
@@ -134,9 +136,9 @@ function BusCard({ info }: { info: NextBusInfo }) {
       )}
 
       {/* 摩的不显示时间线 */}
-      {isMotorcycle && info.isOperating && (
+      {isOnDemand && info.isOperating && (
         <div className="text-center py-3 bg-white/60 rounded-xl">
-          <span className="text-slate-500 font-medium">随时可乘坐</span>
+          <span className="text-slate-500 font-medium">遇到了，别错过</span>
         </div>
       )}
 

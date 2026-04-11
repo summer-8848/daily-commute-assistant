@@ -166,7 +166,7 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
     name: '533路公交（2元）',
     price: 2,
     type: 'bus',
-    note: '6:00-19:30，15分钟/班',
+    note: '6:00-19:30，约15分钟/班',
     routes: [
       // 533路 - 每天运营
       {
@@ -228,7 +228,6 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
     name: '摩的三轮车（约6元）',
     price: 6,
     type: 'motorcycle',
-    note: '遇到了，别错过',
     routes: [
       // 摩的 - 与C线时间一致
       // 早班 - 周一至周五
@@ -291,10 +290,9 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
   },
   {
     id: TransportType.SHARED_BICYCLE,
-    name: '共享自行车（1.5元）',
+    name: '共享自行车（30分钟内1.5元）',
     price: 1.5,
     type: 'bicycle',
-    note: '遇到了，别错过',
     routes: [
       // 共享自行车 - 24小时运营
       {
@@ -353,10 +351,9 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
   },
   {
     id: TransportType.SHARED_ELECTRIC_SCOOTER,
-    name: '共享电瓶车（2.5元）',
+    name: '共享电瓶车（20分钟内2.5元）',
     price: 2.5,
     type: 'electric-scooter',
-    note: '遇到了，别错过',
     routes: [
       // 共享电瓶车 - 24小时运营
       {
