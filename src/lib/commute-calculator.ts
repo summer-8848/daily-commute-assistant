@@ -33,11 +33,16 @@ export class TimeUtils {
   }
 
   // 判断班次类型（根据当前时间）
+  // 早班：06:00 - 09:30
+  // 晚班：09:30 - 21:30
+  // 21:30后显示次日早班
   static getShiftType(currentMinutes: number): ShiftType {
-    // 早班：06:00 - 12:00
-    // 晚班：12:00 - 24:00
-    const noon = 12 * 60;
-    return currentMinutes < noon ? ShiftType.MORNING : ShiftType.EVENING;
+    const morningEnd = 9.5 * 60; // 09:30
+    const eveningEnd = 21.5 * 60; // 21:30
+    if (currentMinutes < morningEnd || currentMinutes >= eveningEnd) {
+      return ShiftType.MORNING;
+    }
+    return ShiftType.EVENING;
   }
 }
 
@@ -323,6 +328,7 @@ export function getNextBus(
       price: config.price,
       note: config.note,
       icon: config.icon,
+      shiftLabel: undefined,
       currentTime,
       currentMinutes: currentTimeMinutes,
       allDepartures: [],
@@ -344,6 +350,7 @@ export function getNextBus(
       price: config.price,
       note: config.note,
       icon: config.icon,
+      shiftLabel: undefined,
       currentTime,
       currentMinutes: currentTimeMinutes,
       allDepartures: [],
@@ -392,6 +399,7 @@ export function getNextBus(
       price: config.price,
       note: config.note,
       icon: config.icon,
+      shiftLabel: undefined,
       currentTime,
       currentMinutes: currentTimeMinutes,
       allDepartures: markedDepartures,
@@ -411,6 +419,7 @@ export function getNextBus(
     price: config.price,
     note: config.note,
     icon: config.icon,
+    shiftLabel: shiftType === ShiftType.MORNING ? '上班' : '下班',
     currentTime,
     currentMinutes: currentTimeMinutes,
     allDepartures: markedDepartures,

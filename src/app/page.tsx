@@ -72,8 +72,13 @@ function BusCard({ info }: { info: NextBusInfo }) {
             </span>
           </div>
           <div>
-            <h3 className="font-bold text-slate-800 text-lg">
+            <h3 className="font-bold text-slate-800 text-lg flex items-center gap-2">
               {info.transportName}
+              {info.shiftLabel && (
+                <span className="text-xs font-medium px-2 py-0.5 bg-blue-100 text-blue-600 rounded-full">
+                  {info.shiftLabel}
+                </span>
+              )}
             </h3>
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-400">

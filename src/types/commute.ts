@@ -66,6 +66,7 @@ export interface NextBusInfo {
   price: string;
   note?: string;               // 备注信息
   icon?: string;              // 图标 emoji
+  shiftLabel?: string;        // 上班/下班
   currentTime: string;          // 当前时间
   currentMinutes: number;       // 当前分钟数
   allDepartures: DepartureTime[]; // 所有发车时间
