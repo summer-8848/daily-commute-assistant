@@ -166,19 +166,19 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
     name: '533路公交（2元）',
     price: 2,
     type: 'bus',
-    note: '时间可能不固定',
+    note: '6:00-19:30，15分钟/班',
     routes: [
       // 533路 - 每天运营
       {
         dayType: DayType.WEEKDAY,
         shiftType: ShiftType.MORNING,
         firstBusTime: '06:00',
-        lastBusTime: '21:30',
+        lastBusTime: '19:30',
         intervals: [
           {
             startTime: '06:00',
-            endTime: '21:30',
-            intervalMinutes: 10
+            endTime: '19:30',
+            intervalMinutes: 15
           }
         ]
       },
@@ -186,12 +186,12 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
         dayType: DayType.WEEKDAY,
         shiftType: ShiftType.EVENING,
         firstBusTime: '06:00',
-        lastBusTime: '21:30',
+        lastBusTime: '19:30',
         intervals: [
           {
             startTime: '06:00',
-            endTime: '21:30',
-            intervalMinutes: 10
+            endTime: '19:30',
+            intervalMinutes: 15
           }
         ]
       },
@@ -199,12 +199,12 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
         dayType: DayType.SATURDAY,
         shiftType: ShiftType.MORNING,
         firstBusTime: '06:00',
-        lastBusTime: '21:30',
+        lastBusTime: '19:30',
         intervals: [
           {
             startTime: '06:00',
-            endTime: '21:30',
-            intervalMinutes: 10
+            endTime: '19:30',
+            intervalMinutes: 15
           }
         ]
       },
@@ -212,12 +212,12 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
         dayType: DayType.SATURDAY,
         shiftType: ShiftType.EVENING,
         firstBusTime: '06:00',
-        lastBusTime: '21:30',
+        lastBusTime: '19:30',
         intervals: [
           {
             startTime: '06:00',
-            endTime: '21:30',
-            intervalMinutes: 10
+            endTime: '19:30',
+            intervalMinutes: 15
           }
         ]
       }
