@@ -138,7 +138,9 @@ function BusCard({ info }: { info: NextBusInfo }) {
       {/* 不显示时间线 */}
       {isOnDemand && info.isOperating && (
         <div className="text-center py-3 bg-white/60 rounded-xl">
-          <span className="text-slate-500 font-medium">遇到了，别错过</span>
+          <span className="text-slate-500 font-medium">
+            {Math.random() > 0.5 ? '遇到了，别错过' : '花小钱，办大事'}
+          </span>
         </div>
       )}
     </div>
