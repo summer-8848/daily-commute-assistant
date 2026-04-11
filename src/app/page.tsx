@@ -144,6 +144,15 @@ function BusCard({ info }: { info: NextBusInfo }) {
         </div>
       )}
 
+      {/* 无服务状态 */}
+      {!isOnDemand && !info.isOperating && (
+        <div className="text-center py-3 bg-slate-100/60 rounded-xl">
+          <span className="text-slate-400 text-sm">
+            今日停运
+          </span>
+        </div>
+      )}
+
       {/* 不显示时间线 */}
       {isOnDemand && info.isOperating && (
         <div className="text-center py-3 bg-white/60 rounded-xl">
