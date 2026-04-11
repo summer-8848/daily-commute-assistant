@@ -228,6 +228,7 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
     name: '摩的三轮车（约6元）',
     price: 6,
     type: 'motorcycle',
+    note: '遇到了，别错过',
     routes: [
       // 摩的 - 与C线时间一致
       // 早班 - 周一至周五
@@ -283,6 +284,130 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
             startTime: '17:30',
             endTime: '19:30',
             intervalMinutes: 20
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: TransportType.SHARED_BICYCLE,
+    name: '共享自行车（1.5元）',
+    price: 1.5,
+    type: 'bicycle',
+    note: '遇到了，别错过',
+    routes: [
+      // 共享自行车 - 24小时运营
+      {
+        dayType: DayType.WEEKDAY,
+        shiftType: ShiftType.MORNING,
+        firstBusTime: '00:00',
+        lastBusTime: '23:59',
+        intervals: [
+          {
+            startTime: '00:00',
+            endTime: '23:59',
+            intervalMinutes: 5
+          }
+        ]
+      },
+      {
+        dayType: DayType.WEEKDAY,
+        shiftType: ShiftType.EVENING,
+        firstBusTime: '00:00',
+        lastBusTime: '23:59',
+        intervals: [
+          {
+            startTime: '00:00',
+            endTime: '23:59',
+            intervalMinutes: 5
+          }
+        ]
+      },
+      {
+        dayType: DayType.SATURDAY,
+        shiftType: ShiftType.MORNING,
+        firstBusTime: '00:00',
+        lastBusTime: '23:59',
+        intervals: [
+          {
+            startTime: '00:00',
+            endTime: '23:59',
+            intervalMinutes: 5
+          }
+        ]
+      },
+      {
+        dayType: DayType.SATURDAY,
+        shiftType: ShiftType.EVENING,
+        firstBusTime: '00:00',
+        lastBusTime: '23:59',
+        intervals: [
+          {
+            startTime: '00:00',
+            endTime: '23:59',
+            intervalMinutes: 5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: TransportType.SHARED_ELECTRIC_SCOOTER,
+    name: '共享电瓶车（2.5元）',
+    price: 2.5,
+    type: 'electric-scooter',
+    note: '遇到了，别错过',
+    routes: [
+      // 共享电瓶车 - 24小时运营
+      {
+        dayType: DayType.WEEKDAY,
+        shiftType: ShiftType.MORNING,
+        firstBusTime: '00:00',
+        lastBusTime: '23:59',
+        intervals: [
+          {
+            startTime: '00:00',
+            endTime: '23:59',
+            intervalMinutes: 5
+          }
+        ]
+      },
+      {
+        dayType: DayType.WEEKDAY,
+        shiftType: ShiftType.EVENING,
+        firstBusTime: '00:00',
+        lastBusTime: '23:59',
+        intervals: [
+          {
+            startTime: '00:00',
+            endTime: '23:59',
+            intervalMinutes: 5
+          }
+        ]
+      },
+      {
+        dayType: DayType.SATURDAY,
+        shiftType: ShiftType.MORNING,
+        firstBusTime: '00:00',
+        lastBusTime: '23:59',
+        intervals: [
+          {
+            startTime: '00:00',
+            endTime: '23:59',
+            intervalMinutes: 5
+          }
+        ]
+      },
+      {
+        dayType: DayType.SATURDAY,
+        shiftType: ShiftType.EVENING,
+        firstBusTime: '00:00',
+        lastBusTime: '23:59',
+        intervals: [
+          {
+            startTime: '00:00',
+            endTime: '23:59',
+            intervalMinutes: 5
           }
         ]
       }

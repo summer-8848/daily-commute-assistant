@@ -3,7 +3,9 @@ export enum TransportType {
   SHUTTLE_B = 'shuttle_b', // B线班车
   SHUTTLE_C = 'shuttle_c', // C线班车
   BUS_533 = 'bus_533',     // 533路公交
-  MOTORCYCLE = 'motorcycle' // 摩的三轮车
+  MOTORCYCLE = 'motorcycle', // 摩的三轮车
+  SHARED_BICYCLE = 'shared_bicycle', // 共享自行车
+  SHARED_ELECTRIC_SCOOTER = 'shared_electric_scooter' // 共享电瓶车
 }
 
 // 天类型
@@ -23,7 +25,7 @@ export interface TransportConfig {
   id: TransportType;
   name: string;            // 显示名称
   price: number;           // 费用
-  type: 'shuttle' | 'bus' | 'motorcycle'; // 交通类型
+  type: 'shuttle' | 'bus' | 'motorcycle' | 'bicycle' | 'electric-scooter'; // 交通类型
   routes: RouteSchedule[]; // 班次时刻表
   note?: string;           // 备注信息
 }
