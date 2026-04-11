@@ -402,7 +402,9 @@ export function getAllNextBuses(currentTime: string, currentDate: Date = new Dat
     TransportType.SHUTTLE_B,
     TransportType.SHUTTLE_C,
     TransportType.BUS_533,
-    TransportType.MOTORCYCLE
+    TransportType.MOTORCYCLE,
+    TransportType.SHARED_BICYCLE,
+    TransportType.SHARED_ELECTRIC_SCOOTER
   ];
 
   return types
