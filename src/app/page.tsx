@@ -8,6 +8,7 @@ import { getAllNextBuses } from '@/lib/commute-calculator';
 function BusCard({ info }: { info: NextBusInfo }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isOnDemand = ['motorcycle', 'bicycle', 'electric-scooter'].includes(info.type);
+  const [tagline] = useState(() => Math.random() > 0.5 ? '遇到了，别错过' : '花小钱，办大事');
 
   const getStatusColor = () => {
     if (!info.isOperating) return 'bg-slate-50 border-slate-200';
@@ -138,9 +139,7 @@ function BusCard({ info }: { info: NextBusInfo }) {
       {/* 不显示时间线 */}
       {isOnDemand && info.isOperating && (
         <div className="text-center py-3 bg-white/60 rounded-xl">
-          <span className="text-slate-500 font-medium">
-            {Math.random() > 0.5 ? '遇到了，别错过' : '花小钱，办大事'}
-          </span>
+          <span className="text-slate-500 font-medium">{tagline}</span>
         </div>
       )}
     </div>
