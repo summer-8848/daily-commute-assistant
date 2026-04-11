@@ -223,6 +223,32 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
             intervalMinutes: 15
           }
         ]
+      },
+      {
+        dayType: DayType.SUNDAY,
+        shiftType: ShiftType.MORNING,
+        firstBusTime: '06:00',
+        lastBusTime: '19:30',
+        intervals: [
+          {
+            startTime: '06:00',
+            endTime: '19:30',
+            intervalMinutes: 15
+          }
+        ]
+      },
+      {
+        dayType: DayType.SUNDAY,
+        shiftType: ShiftType.EVENING,
+        firstBusTime: '06:00',
+        lastBusTime: '19:30',
+        intervals: [
+          {
+            startTime: '06:00',
+            endTime: '19:30',
+            intervalMinutes: 15
+          }
+        ]
       }
     ]
   },
