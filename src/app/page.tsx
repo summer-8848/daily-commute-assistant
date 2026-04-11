@@ -76,7 +76,7 @@ function BusCard({ info }: { info: NextBusInfo }) {
             </h3>
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-400">
-                {info.price === 0 ? '免费' : `${info.price}元`}
+                {info.price === '0' ? '免费' : `${info.price}元`}
               </span>
               {info.note && (
                 <span className="ml-1 text-xs text-amber-500 font-medium">({info.note})</span>

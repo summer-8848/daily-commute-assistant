@@ -24,7 +24,7 @@ export enum ShiftType {
 export interface TransportConfig {
   id: TransportType;
   name: string;            // 显示名称
-  price: number;           // 费用
+  price: string;           // 费用
   type: 'shuttle' | 'bus' | 'motorcycle' | 'bicycle' | 'electric-scooter'; // 交通类型
   routes?: RouteSchedule[]; // 班次时刻表
   note?: string;           // 备注信息
@@ -63,7 +63,7 @@ export interface NextBusInfo {
   transportType: TransportType;
   type: 'shuttle' | 'bus' | 'motorcycle' | 'bicycle' | 'electric-scooter';
   transportName: string;
-  price: number;
+  price: string;
   note?: string;               // 备注信息
   icon?: string;              // 图标 emoji
   currentTime: string;          // 当前时间
