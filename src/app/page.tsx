@@ -219,8 +219,10 @@ export default function Home() {
     const mins = hours * 60 + minutes;
     const morningEnd = 9.5 * 60;
     const eveningEnd = 21.5 * 60;
-    if (mins < morningEnd || mins >= eveningEnd) return '上班';
-    return '下班';
+    if (mins < morningEnd || mins >= eveningEnd) {
+      return mins >= eveningEnd ? '明天上班' : '今天上班';
+    }
+    return '今天下班';
   })();
 
   // 检测页面可见性变化，切回前台时自动刷新
