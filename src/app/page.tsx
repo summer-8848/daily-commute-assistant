@@ -10,6 +10,13 @@ function BusCard({ info }: { info: NextBusInfo }) {
   const isOnDemand = ['motorcycle', 'bicycle', 'electric-scooter'].includes(info.type);
   const [tagline] = useState(() => Math.random() > 0.5 ? '遇到了，别错过' : '花小钱，办大事');
 
+  const formatWaitTime = (minutes: number) => {
+    if (minutes < 60) return `${minutes}分钟`;
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return m > 0 ? `${h}小时${m}分钟` : `${h}小时`;
+  };
+
   const getStatusColor = () => {
     if (!info.isOperating) return 'bg-slate-50 border-slate-200';
     if (info.waitMinutes <= 3) return 'bg-emerald-50 border-emerald-300';
@@ -111,7 +118,7 @@ function BusCard({ info }: { info: NextBusInfo }) {
                   {/* 标记 */}
                   <div className="h-6 flex items-center mb-1">
                     {dep.isPrev && <span className="text-xs text-slate-400 font-medium">上一班</span>}
-                    {dep.isNext && <span className="text-xs text-emerald-600 font-bold whitespace-nowrap">下一班{info.waitMinutes > 0 ? ` · ${info.waitMinutes}分钟` : ''}</span>}
+                    {dep.isNext && <span className="text-xs text-emerald-600 font-bold whitespace-nowrap">下一班{info.waitMinutes > 0 ? ` · ${formatWaitTime(info.waitMinutes)}` : ''}</span>}
                     {dep.isNextNext && <span className="text-xs text-blue-400 font-medium">下下一班</span>}
                   </div>
                   {/* 时间气泡 */}

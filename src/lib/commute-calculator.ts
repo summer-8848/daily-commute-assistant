@@ -314,6 +314,12 @@ export function getNextBus(
   const dayType = TimeUtils.getDayType(dayOfWeek);
   const shiftType = TimeUtils.getShiftType(currentTimeMinutes);
 
+  // 21:30后显示次日早班，将时间往前拨一天以便计算下一班
+  const eveningEnd = 21.5 * 60;
+  const effectiveMinutes = shiftType === ShiftType.MORNING && currentTimeMinutes >= eveningEnd
+    ? currentTimeMinutes - 24 * 60
+    : currentTimeMinutes;
+
   // 班车/公交/摩的处理
   const schedule = config.routes?.find(
     (r: any) => r.dayType === dayType && r.shiftType === shiftType
@@ -369,7 +375,7 @@ export function getNextBus(
     schedule.intervals
   );
   
-  const markedDepartures = markDepartures(allDepartures, currentTimeMinutes);
+  const markedDepartures = markDepartures(allDepartures, effectiveMinutes);
 
   // 找到上一班、下一班、下下班
   let prevBusTime = '-';
