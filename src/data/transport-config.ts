@@ -297,124 +297,14 @@ export const TRANSPORT_CONFIGS: TransportConfig[] = [
     name: '共享自行车（30分钟内1.5元）',
     price: 1.5,
     type: 'bicycle',
-    icon: '🚲',
-    routes: [
-      // 共享自行车 - 24小时运营
-      {
-        dayType: DayType.WEEKDAY,
-        shiftType: ShiftType.MORNING,
-        firstBusTime: '00:00',
-        lastBusTime: '23:59',
-        intervals: [
-          {
-            startTime: '00:00',
-            endTime: '23:59',
-            intervalMinutes: 5
-          }
-        ]
-      },
-      {
-        dayType: DayType.WEEKDAY,
-        shiftType: ShiftType.EVENING,
-        firstBusTime: '00:00',
-        lastBusTime: '23:59',
-        intervals: [
-          {
-            startTime: '00:00',
-            endTime: '23:59',
-            intervalMinutes: 5
-          }
-        ]
-      },
-      {
-        dayType: DayType.SATURDAY,
-        shiftType: ShiftType.MORNING,
-        firstBusTime: '00:00',
-        lastBusTime: '23:59',
-        intervals: [
-          {
-            startTime: '00:00',
-            endTime: '23:59',
-            intervalMinutes: 5
-          }
-        ]
-      },
-      {
-        dayType: DayType.SATURDAY,
-        shiftType: ShiftType.EVENING,
-        firstBusTime: '00:00',
-        lastBusTime: '23:59',
-        intervals: [
-          {
-            startTime: '00:00',
-            endTime: '23:59',
-            intervalMinutes: 5
-          }
-        ]
-      }
-    ]
+    icon: '🚲'
   },
   {
     id: TransportType.SHARED_ELECTRIC_SCOOTER,
     name: '共享电瓶车（20分钟内2.5元）',
     price: 2.5,
     type: 'electric-scooter',
-    icon: '🛵',
-    routes: [
-      // 共享电瓶车 - 24小时运营
-      {
-        dayType: DayType.WEEKDAY,
-        shiftType: ShiftType.MORNING,
-        firstBusTime: '00:00',
-        lastBusTime: '23:59',
-        intervals: [
-          {
-            startTime: '00:00',
-            endTime: '23:59',
-            intervalMinutes: 5
-          }
-        ]
-      },
-      {
-        dayType: DayType.WEEKDAY,
-        shiftType: ShiftType.EVENING,
-        firstBusTime: '00:00',
-        lastBusTime: '23:59',
-        intervals: [
-          {
-            startTime: '00:00',
-            endTime: '23:59',
-            intervalMinutes: 5
-          }
-        ]
-      },
-      {
-        dayType: DayType.SATURDAY,
-        shiftType: ShiftType.MORNING,
-        firstBusTime: '00:00',
-        lastBusTime: '23:59',
-        intervals: [
-          {
-            startTime: '00:00',
-            endTime: '23:59',
-            intervalMinutes: 5
-          }
-        ]
-      },
-      {
-        dayType: DayType.SATURDAY,
-        shiftType: ShiftType.EVENING,
-        firstBusTime: '00:00',
-        lastBusTime: '23:59',
-        intervals: [
-          {
-            startTime: '00:00',
-            endTime: '23:59',
-            intervalMinutes: 5
-          }
-        ]
-      }
-    ]
+    icon: '🛵'
   }
 ];
 

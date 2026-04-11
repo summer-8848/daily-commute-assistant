@@ -310,7 +310,7 @@ export function getNextBus(
   const shiftType = TimeUtils.getShiftType(currentTimeMinutes);
 
   // 班车/公交/摩的处理
-  const schedule = config.routes.find(
+  const schedule = config.routes?.find(
     (r: any) => r.dayType === dayType && r.shiftType === shiftType
   );
 
