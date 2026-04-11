@@ -8,7 +8,10 @@ import { getAllNextBuses } from '@/lib/commute-calculator';
 function BusCard({ info }: { info: NextBusInfo }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isOnDemand = ['motorcycle', 'bicycle', 'electric-scooter'].includes(info.type);
-  const [tagline] = useState(() => Math.random() > 0.5 ? '遇到了，别错过' : '花小钱，办大事');
+  const [tagline] = useState(() => {
+    const taglines = ['遇到了，别错过', '花小钱，办大事', '说走就走', '省时省钱', '方便灵活'];
+    return taglines[Math.floor(Math.random() * taglines.length)];
+  });
 
   const formatWaitTime = (minutes: number) => {
     if (minutes < 60) return `${minutes}分钟`;
